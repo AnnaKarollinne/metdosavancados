@@ -7,3 +7,7 @@ hist(normal)
 binominal<-rbinom(n=10000,size = 20,prob = 0.4)
 binominal
 hist(binominal)
+#variavel index
+index<-seq(1,(lenght(normal))
+index
+
