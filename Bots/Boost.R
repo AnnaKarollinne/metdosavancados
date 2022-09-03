@@ -3,3 +3,4 @@ normal<-rnorm(20, mean = 50,sd=2)
 boots<-sample(normal,15,replace = TRUE)
 boots
 hist(boots)
+bootsDistNormal<- replicate(15, boots)
