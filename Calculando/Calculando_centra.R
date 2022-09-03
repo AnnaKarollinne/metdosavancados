@@ -1,3 +1,5 @@
+#Carregar dado
+load("impeachment_dilma.rda")
 #Calculando
 mediaPT<- mean(impeachment_dilma$numeroPT)
 mediaPT
