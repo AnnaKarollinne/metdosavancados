@@ -1,7 +1,9 @@
-#O vetor abaixo refere-se as nacionalidades dos migrantes oriundos de tres pa�ses:
+#O vetor abaixo refere-se as nacionalidades dos migrantes oriundos de tres países:
 migrante<- c("venezuela", "haiti","ucrania")
 migrante
-#Regressão Linear
+#Carregar dados
+load("impeachment_dilma.rda")
+#RegressÃ£o Linear
 impeachment_dilma
 regWord<- lm(impeachment_dilma$numeroPalavras~impeachment_dilma$numeroCaracteres)
 regWord
