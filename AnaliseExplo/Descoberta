@@ -1,0 +1,12 @@
+dadosseg<-USArrests
+pacman::p_load(funModeling, tidyverse) 
+#olhada nos dados
+glimpse(dadosseg) 
+# estrutura dos dados (missing etc)
+status(dadosseg)
+# frequência das variáveis fator
+freq(dadosseg) 
+# exploração das variáveis numéricas
+plot_num(dadosseg) 
+# estatísticas das variáveis numéricas
+profiling_num(dadosseg) 
