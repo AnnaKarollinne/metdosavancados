@@ -1,0 +1,17 @@
+dadosseg<-USArrests
+## CORRELAÇÃO COM R ##
+pacman::p_load(corrplot, dplyr, ggplot2)
+
+# BASE DE DADOS USArrests SEM MURDER #
+dadosseg2 <- dadosseg %>% select(-UrbanPop)
+
+# TABELA DE CORRELAÇÃO COM TODAS AS VARIÁVEIS #
+cor(dadosseg2)
+
+# GRÁFICOS DE DISPERSÃO PAREADOS DAS VARIÁVEIS #
+pairs(dadosseg2)
+
+# CORRPLOT DAS VARIÁVEIS #
+dadossegCor <- cor(dadosseg2)
+corrplot(dadossegCor, method = "number", order = 'alphabet')
+corrplot(dadossegCor, order = 'alphabet')
