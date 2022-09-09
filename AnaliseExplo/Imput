@@ -1,0 +1,16 @@
+# imputação de valores em outliers ou missing
+pacman::p_load(data.table, Hmisc, VIM) # carrega pacotes
+monkeypox <- fread("https://raw.githubusercontent.com/owid/monkeypox/main/owid-monkeypox-data.csv")
+## imputação numérica
+# preparação da base, colocando NA aleatórios
+monkeypoxDT <- monkeypox%>% setDT() #copiar base usando a data.table
+
+monkeypoxDT$new_cases_smoothed <- impute(monkeypoxDT$new_cases_smoothed, fun = mean) # média
+
+
+## Hot deck
+# imputação aleatória
+monkeypoxDT <- monkeypox%>% setDT() #copiar base, usando a data.table
+(monkeypoxDT$new_cases_smoothed <- impute(monkeypoxDT$new_cases_smoothed, "random")) # fazemos a imputação aleatória
+
+
