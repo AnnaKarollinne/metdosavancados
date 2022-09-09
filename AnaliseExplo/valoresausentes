@@ -1,0 +1,16 @@
+pacman::p_load(data.table, funModeling, tidyverse) 
+#importa base
+zika <- fread("http://dados.recife.pe.gov.br/dataset/2a9b1c39-0700-4ddf-9a10-b3c8d5d9396c/resource/f2d039a6-e84f-4698-9174-18e448bb0106/download/zica2016.csv") 
+#estrutura dados
+status(zika) 
+
+## Shadow Matrix da nossa base de Zika com adaptações
+
+zikaNA <- as.data.frame(abs(is.na(zika))) # cria a matriz sombra da base de zika
+
+zikaNA <- zikaNA[which(sapply(zikaNA, sd) > 0)] # mantém variáveis com NA
+varr = round(cor(zikaNA), 3) # calcula correlações
+
+# modificação já que não temos uma base numérica
+zikaNA <- cbind(zikaNA, dt_nascimento = zika$dt_nascimento) 
+zikaNA_dt_nascimento <- zikaNA %>% group_by(dt_nascimento) %>% summarise(across(everything(), list(sum))) 
