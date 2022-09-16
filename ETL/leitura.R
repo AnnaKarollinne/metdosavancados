@@ -1,3 +1,7 @@
+#RESPOSTA:
+#O codigo nativo R possui uma menor media de tempo para leitura e uma maior media para exportação.
+#Já o plano com interoperatividade pode ser lido/ operacionalizado em diversas outras linguagens (python,por exemplo)
+
 #install.packages("microbenchmark")
 
 library(microbenchmark)
