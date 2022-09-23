@@ -12,7 +12,9 @@ latin_america_countries<-c("Argentina", "Brazil", "Bolivia", "Chile", "Colombia"
 latin_america<- general_data %>% filter(location %in% latin_america_countries) # filtra casos apenas no vetor
 
 mlatin <- latin_america %>% group_by(location) %>% mutate(row = row_number()) %>% select(location, total_cases, row) # cria matriz dos países, agrupando por local, criando uma nova linha com index e selecionando apenas algumas variáveis
-
+#garantir a mesma quantidade de casos
+result <- mlatin %>% group_by(location) %>% filter(row == max(row))
+mlatin <- mlatin %>% filter(row<=min(result$row))
 # pivota o data frame de long para wide
 mlatinw <- mlatin %>% pivot_wider(names_from = row, values_from = total_cases) %>% remove_rownames %>% column_to_rownames(var="location") 
 
