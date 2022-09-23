@@ -1,6 +1,5 @@
 #Carregar dados
-impeachment_dilma<- fread('https://github.com/AnnaKarollinne/metdosavancados/blob/main/ETL/impeachment_dilma.rda')
-load("impeachment_dilma.rda")
+load(url("https://github.com/AnnaKarollinne/metdosavancados/blob/main/%C3%8Dndicexx/impeachment_dilma.rda"?raw=true))
 #Index
 impeachment_dilma$nomeOrador[10]
 #ou em caso de busca no console
