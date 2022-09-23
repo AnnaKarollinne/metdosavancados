@@ -9,7 +9,7 @@ library(dplyr)
 library(arules)
 library(forcats)
 
-impeachment_dilma<- fread('https://github.com/AnnaKarollinne/metdosavancados/blob/main/ETL/impeachment_dilma.rda')
+load(url('https://github.com/AnnaKarollinne/metdosavancados/blob/main/ETL/impeachment_dilma.rda?raw=true')
 str(impeachment_dilma)
 
 # conversão em fatores
