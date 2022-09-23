@@ -8,8 +8,8 @@ library(ade4)
 library(dplyr)
 library(arules)
 library(forcats)
-impeachment_dilma<- fread('https://github.com/AnnaKarollinne/metdosavancados/blob/main/ETL/impeachment_dilma.rda')
-load(file = "impeachment_dilma.rda")
+
+load(url("https://github.com/AnnaKarollinne/metdosavancados/blob/main/ETL/impeachment_dilma.rdafile?raw=true"))
 
 # Sumário
 count(impeachment_dilma,partido)
