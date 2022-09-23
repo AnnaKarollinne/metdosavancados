@@ -9,7 +9,7 @@ library(dplyr)
 library(arules)
 library(forcats)
 
-load(url("https://github.com/AnnaKarollinne/metdosavancados/blob/main/ETL/impeachment_dilma.rdafile?raw=true"))
+load(url("https://github.com/AnnaKarollinne/metdosavancados/blob/main/ETL/impeachment_dilma.rda?raw=true"))
 
 # Sumário
 count(impeachment_dilma,partido)
