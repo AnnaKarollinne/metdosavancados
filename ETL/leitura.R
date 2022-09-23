@@ -16,7 +16,7 @@ saveRDS(sinistrosRecifeRaw, "bases_tratadas/sinistrosRecife.rds")
 write.csv2(sinistrosRecifeRaw, "bases_tratadas/sinistrosRecife.csv")
 
 # exporta em formato rda (.rda)
-save(sinistrosRecife,file = 'bases_tratadas/sinistrosRecife.rda')
+save(sinistrosRecifeRaw,file = 'bases_tratadas/sinistrosRecife.rda')
 
 # carrega base de dados em formato nativo R
 sinistrosRecife <- readRDS('bases_tratadas/sinistrosRecife.rds')
