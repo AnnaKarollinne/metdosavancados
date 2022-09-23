@@ -1,0 +1,4 @@
+pacman::p_load(dplyr,tidyverse)
+CicloviaRE<- read.csv2('http://dados.recife.pe.gov.br/dataset/667cb4cf-fc93-4687-bb8f-431550eeb2db/resource/575613ac-9660-4210-989c-eed4255d400c/download/detalhamentocicloviario2022-08.csv')
+SemaforoRE<- read.csv2('http://dados.recife.pe.gov.br/dataset/ab87d3e2-ea78-4f27-95fd-d7ef6f3b9ee5/resource/ab6343e9-c3f2-4d62-9554-5778f9f33738/download/semaforo_dados_abertos20220803.csv')                       
+BairrosRe<-left_join(CicloviaRE,SemaforoRE, by= c('bairros'='bairro'))
