@@ -1,0 +1,71 @@
+# carrega as bibliotecas
+install.packages("pacman")
+pacman::p_load(ade4, car, caret, corrplot, data.table, dplyr, forcats, funModeling, ggplot2, mlbench, mltools, randomForest, rattle, tidyverse)
+
+general_data <- fread("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+
+general_data <- general_data %>% filter(!is.na(new_cases))
+
+general_data <- general_data %>% filter(!is.na(total_cases))
+
+# leitura da base de dados
+general_data_D <- acm.disjonctif(as.data.frame(general_data$continent))
+
+names(general_data_D) <- c('Continent', 'Africa', 'Asia', 'Europe', 'North_America', 'Oceania', 'South_America')
+
+general_data <- cbind(general_data, general_data_D)
+
+# AED 
+status(general_data) # explorar a qualidade das variÃ¡veis
+freq(general_data) # explorar os fatores
+profiling_num(general_data) # estatÃ­sticas das variÃ¡veis numÃ©ricas
+
+#corrplot(cor(general_data[ , c(5:12)])) # correlaÃ§Ã£o entre as variÃ¡veis
+
+# Treino e Teste: PrÃ©-processamento
+particaoCovid = createDataPartition(general_data$total_cases, p = .7, list = F) # cria a partiÃ§Ã£o 70-30
+treinoCovid = general_data[particaoCovid, ] # treino
+testeCovid = general_data[-particaoCovid, ] # - treino = teste
+
+# ValidaÃ§Ã£o Cruzada: PrÃ©-processamento
+# Controle de treinamento
+
+train.control <- trainControl(method = "cv", number = 10, verboseIter = T) # controle de treino
+
+# Treinamentos
+## RegressÃ£o Linear
+covid_LM <- train(total_cases ~ Continent + Africa + Asia + Europe + North_America + Oceania + South_America + new_cases, data = treinoCovid, method = "lm", trControl = train.control)
+summary(covid_LM) # sumÃ¡rio do modelo linear
+
+## Ãrvore de DecisÃ£o
+covid_RPART <- train(total_cases ~ Continent + Africa + Asia + Europe + North_America + Oceania + South_America + new_cases, data = treinoCovid, method = "rpart", trControl = train.control)
+
+summary(covid_RPART)
+fancyRpartPlot(covid_RPART$finalModel) # desenho da Ã¡rvore
+plot(varImp(covid_RPART)) # importÃ¢ncia das variÃ¡veis
+
+# Bagging com Floresta AleatÃ³ria
+covid_RF <- train(total_cases ~ Continent + Africa + Asia + Europe + North_America + Oceania + South_America + new_cases, data = treinoCovid, method = "cforest", trControl = train.control)
+
+plot(covid_RF) # evoluÃ§Ã£o do modelo
+varImp(covid_RF, scale = T) # importÃ¢ncia de cada variÃ¡vel
+plot(varImp(covid_RF, scale = T)) # plot de importÃ¢ncia
+
+# Boosting com Boosted Generalized Linear Model
+covid_ADA <- train(total_cases ~ Continent + Africa + Asia + Europe + North_America + Oceania + South_America + new_cases, data = treinoCovid, method = "glmboost", trControl = train.control)
+
+plot(covid_ADA) # evoluÃ§Ã£o do modelo
+print(covid_ADA) # modelo
+summary(covid_ADA) # sumÃ¡rio
+
+melhor_modelo <- resamples(list(LM = covid_LM, RPART = covid_RPART, RF = covid_RF, ADABOOST = covid_ADA))
+melhor_modelo
+
+summary(melhor_modelo)
+
+plot(erros1 <- c(rep(2,10)))
+plot(erros2 <- c(rep(1,5), rep(3,5)))
+plot(erros3 <- c(rep(0,8), rep(10,2)))
+lista_erros <- matrix(c(sum(erros1)/10,sum(erros2)/10, sum(erros3)/10, sqrt(sum(erros1^2)/10), sqrt(sum(erros2^2)/10), sqrt(sum(erros3^2)/10)), ncol = 2, dimnames = list(c('Erros 1', 'Erros 2', 'Erros 3'), c('MAE', 'RMSE')))
+lista_erros
+
