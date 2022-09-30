@@ -2,7 +2,7 @@
 migrante<- c("venezuela", "haiti","ucrania")
 migrante
 #Carregar dados
-load("impeachment_dilma.rda")
+load(url("https://github.com/AnnaKarollinne/metdosavancados/blob/main/Calculando/impeachment_dilma.rda?raw=true"))
 #RegressÃ£o Linear
 impeachment_dilma
 regWord<- lm(impeachment_dilma$numeroPalavras~impeachment_dilma$numeroCaracteres)
