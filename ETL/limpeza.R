@@ -21,4 +21,5 @@ profiling_num(latin_america) # estatísticas das variáveis numéricas
 latin_america %>% filter(new_cases < 0)
 
 latin_america <- latin_america %>% filter(new_cases>=0)
-
+#REMOVENDO NA
+latin_america <- latin_america %>% filter(!is.na(new_deaths))
