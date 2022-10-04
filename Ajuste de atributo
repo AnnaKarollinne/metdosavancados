@@ -1,0 +1,19 @@
+pacman::p_load(dplyr, ggplot2, data.table, gridExtra)
+
+# carregar dados covid19 Pernambuco
+CicloviaRE<- read.csv2('http://dados.recife.pe.gov.br/dataset/667cb4cf-fc93-4687-bb8f-431550eeb2db/resource/575613ac-9660-4210-989c-eed4255d400c/download/detalhamentocicloviario2022-08.csv')
+
+# agrupar casos por município ajustando variáveis
+CicloviaPEBai <- CicloviaRE %>% count(bairros, sort = T, name = 'casos') %>% mutate(casos2 = sqrt(casos), casosLog = log10(casos))
+
+# criar loop para os diferentes gráficoss
+nomeVar <- names(CicloviaPEBai)[2:4] # passar nomes das vars para vetor
+listaPlots <- NULL
+
+for(i in nomeVar) {
+  plot <- CicloviaPEBai %>% ggplot(aes_string(x = 'bairros', y=i)) + geom_bar(stat = "identity") + labs(x = "Município")
+  listaPlots[[length(listaPlots) + 1]] <-plot
+} # criar lista com os plots
+
+# printar todos os plots, lado a lado
+grid.arrange(listaPlots[[1]], listaPlots[[2]], listaPlots[[3]], ncol=3)
