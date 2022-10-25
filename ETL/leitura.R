@@ -29,7 +29,7 @@ load(file = 'sinistrosRecife.rda')
 
 microbenchmark(a <- saveRDS(sinistrosRecifeRaw, "sinistrosRecife.rds"), b <- write.csv2(sinistrosRecifeRaw, "sinistrosRecife.csv"), times = 30L)
 
-microbenchmark(a <- readRDS('sinistrosRecife.rds'), b <- read.csv2('sinistrosRecife.csv', sep = ';'),c <- save(sinistrosRecifeRaw,file = 'bases_tratadas/sinistrosRecife.rda'), times = 10L)
+microbenchmark(a <- readRDS('sinistrosRecife.rds'), b <- read.csv2('sinistrosRecife.csv', sep = ';'),c <- save(sinistrosRecifeRaw,file = 'sinistrosRecife.rda'), times = 10L)
 
-microbenchmark(a <- save(sinistrosRecife,file = 'sinistrosRecife.rda'), b <- load(file = 'sinistrosRecife.rda'),c <- sinistrosRecife <- load(file = 'bases_tratadas/sinistrosRecife.rda'),  times = 10L)
+microbenchmark(a <- save(sinistrosRecife,file = 'sinistrosRecife.rda'), b <- load(file = 'sinistrosRecife.rda'),c <- sinistrosRecife <- load(file = 'sinistrosRecife.rda'),  times = 10L)
 
