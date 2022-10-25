@@ -36,11 +36,5 @@ matrizCusto
 general_data_RF_CLASS <- randomForest(total_cases ~ Continent + Africa + Asia + Europe + North_America + Oceania + South_America + new_cases, data = treinoCovid, method = "cforest", parms= list(loss= matrizCusto))
 general_data_RF_CLASS
 
-general_data_C5_CLASS <- train(total_cases ~ Continent + Africa + Asia + Europe + North_America + Oceania + South_America + new_cases, data = treinoCovid, method = "C5.0Cost", trControl = train.control)
-general_data_C5_CLASS
-
 predicao_general_data_RF_CLASS = predict(general_data_RF_CLASS, testeCovid) # criar predição
-cmgeneral_data_RF_CLASS <- confusionMatrix(predicao_general_data_CLASS, testeCovid$total_case_Disc)
-cmgeneral_data_RF_CLASS
 
-general_data_C5_CLASS = predict(general_data_C5_CLASS, testeCovid) # criar predição
