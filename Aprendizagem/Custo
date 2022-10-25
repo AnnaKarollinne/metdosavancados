@@ -1,0 +1,57 @@
+# carrega as bibliotecas
+pacman::p_load(ade4, arules, car, caret, corrplot, data.table, dplyr, DMwR, e1071, forcats, funModeling, ggplot2, mlbench, mltools, randomForest, rattle, tidyverse)
+
+# leitura da base de dados
+general_data <- fread("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+general_data <- general_data %>% filter(!is.na(new_cases))
+general_data <- general_data %>% filter(!is.na(total_cases))
+general_data <- general_data[!is.na(general_data$new_vaccinations),]
+
+covid <-data.frame(general_data$continent)
+covid$total_cases <- general_data$total_cases
+covid$date <- general_data$date
+covid$new_cases <- general_data$new_cases
+
+rm(general_data)
+
+#covid <- covid %>% filter(!is.na(total_cases))
+
+# Dummies
+covid_D <- acm.disjonctif(as.data.frame(covid$general_data.continent))
+names(covid_D) <- c('Continent', 'Africa', 'Asia', 'Europe', 'North_America', 'Oceania', 'South_America')
+covid <- cbind(covid, covid_D)
+
+# DiscretizaÃ§Ã£o
+covid$total_cases_disc <- discretize(covid$total_cases, method = "interval", breaks = 2, labels = c("baixa", "alta"))
+
+table(covid$total_cases_disc)
+
+# Treino e Teste: PrÃ©-processamento
+particaoCovid = createDataPartition(covid$total_cases, p = .7, list = F) # cria a partiÃÂ§ÃÂ£o 70-30
+treinoCovid = covid[particaoCovid, ] # treino
+testeCovid = covid[-particaoCovid, ] # - treino = teste
+
+prop.table(table(treinoCovid$total_cases_disc))
+
+# ValidaÃ§Ã£o Cruzada: PrÃ©-processamento
+# Controle de treinamento
+train.control <- trainControl(method = "cv", number = 10, verboseIter = T) # controle de treino
+
+matrizCusto <- matrix(c(0,1,1000,0), ncol = 2)
+rownames(matrizCusto) <- levels(treinoCovid$total_cases_disc)
+colnames(matrizCusto) <- levels(treinoCovid$total_cases_disc)
+matrizCusto
+
+covid_RF_CLASS <- randomForest(total_cases_disc ~ Continent + Africa + Asia + Europe + North_America + Oceania + South_America + new_cases, data = treinoCovid, method = "cforest", parms = list(loss = matrizCusto))
+covid_RF_CLASS
+
+covid_C5_CLASS <- train(total_cases_disc ~ Continent + Africa + Asia + Europe + North_America + Oceania + South_America + new_cases, data = treinoCovid, method = "C5.0Cost", trControl = train.control)
+covid_C5_CLASS
+
+predicao_covid_RF_CLASS = predict(covid_RF_CLASS, testeCovid) # criar prediÃ§Ã£o
+cm_covid_RF_CLASS <- confusionMatrix(predicao_covid_RF_CLASS, testeCovid$total_cases_disc)
+cm_covid_RF_CLASS
+
+predicao_covid_C5_CLASS = predict(covid_C5_CLASS, testeCovid) # criar prediÃ§Ã£o
+cm_covid_C5_CLASS <- confusionMatrix(predicao_covid_C5_CLASS, testeCovid$total_cases_disc)
+cm_covid_C5_CLASS
