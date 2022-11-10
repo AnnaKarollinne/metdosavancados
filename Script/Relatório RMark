@@ -1,0 +1,47 @@
+---
+title: "Script Relatório Rmarkdown"
+author: "Anna Karollinne"
+date: "`r format(Sys.time(), '%d-%m-%Y')`"
+output: 
+  html_document:
+    number_sections: true
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+# Assignment {.unnumbered}
+
+# base de dados `impeachment-dilma-dados-filter.rda`, utilizando o modelo *Wordfish* para estimar os pontos ideais de cada um dos partidos cujos deputados proferiram falas no dia de abertura do processo de impeachement da ex-Presidenta Dilma Rousseff. 
+
+```{r echo= FALSE}
+pacman::p_load(kableExtra,here,quanteda.textplots,stringi,quanteda,tidytext,tidyverse,quanteda.corpora,quanteda.textmodels)
+load(here("data/impeachment-dilma-dados-filter.rda"))
+
+impeachment_dfm<- tibble(impeachment_dilma) %>% corpus(docid_field =
+"doc_id", text_field = "text") %>%
+tokens(remove_punct = TRUE) %>% tokens_tolower() %>%
+tokens_remove(stopwords(source = "stopwords-iso", language = "pt"),
+min_nchar = 2) %>% tokens_wordstem(language = "pt") %>% dfm() %>%
+dfm_select(pattern = c("sr", "total", "deput", "vot", "president",
+"bet", "mansur", "palm", "v.ex", "sra", "tem", "sao"), selection =
+"remove") %>% dfm_trim(min_docfreq = 0.01, docfreq_type = "prop") %>%
+dfm_subset(subset = partido %in% c("PT", "PSDB", "PMDB", "PTDOB", "PTB",
+"PP","PR", "PSD", "PSB", "REDE", "PRB", "PDT","SOLIDARIEDADE", "PTN",
+"PSC", "PPS", "PHS", "PV", "PSOL", "DEM", "PCDOB", "PSL", "PEN", "PMB",
+"PROS"))
+
+dfmat_dilma <- dfm_group(impeachment_dfm, groups = partido)
+tmod_wf_dilma <- textmodel_wordfish(dfmat_dilma, dir = c(6,5))
+
+knitr::kable(summary(tmod_wf_dilma)[2]) %>%
+kable_styling(bootstrap_options = c("striped", "hover")) %>%
+scroll_box(width = "100%", height = "200px")
+
+textplot_scale1d(tmod_wf_dilma)
+```
