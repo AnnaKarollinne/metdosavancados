@@ -1,0 +1,15 @@
+pacman::p_load(cluster, dplyr, factoextra, ggplot2)
+
+# definir semente aleatória
+set.seed(1)
+
+# Método do Cotovelo
+fviz_nbclust(impeachment_dilma[6:7], kmeans, method = "wss")
+
+# Agrupamento com kmeans
+cls <- kmeans(x = impeachment_dilma[6:8], centers = 3) # aprendizagem ns
+impeachment_dilma$cluster <- as.factor(cls$cluster) # passamos os clusters para a base original
+head(impeachment_dilma)
+
+# plot com função própria do pacote
+clusplot(impeachment_dilma, cls$cluster, xlab = 'Fator1', ylab = 'Fator2', main = 'Agrupamento', lines = 0, shade = F, color = TRUE, labels = 2)
